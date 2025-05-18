@@ -11,7 +11,7 @@ import {IPriceOracle} from "../lib/aave-v3-core/contracts/interfaces/IPriceOracl
 import {IPriceOracleGetter} from "../lib/aave-v3-core/contracts/interfaces/IPriceOracleGetter.sol";
 import {IPoolConfigurator, PoolConfigurator} from "../lib/aave-v3-core/contracts/protocol/pool/PoolConfigurator.sol";
 // import {IPool, Pool} from "../lib/aave-v3-core/contracts/protocol/pool/Pool.sol";
-// import {IL2Pool, L2Pool} from "../lib/aave-v3-core/contracts/protocol/pool/L2Pool.sol";
+import {IL2Pool, L2Pool} from "../lib/aave-v3-core/contracts/protocol/pool/L2Pool.sol";
 // import {AToken} from "../lib/aave-v3-core/contracts/protocol/tokenization/AToken.sol";
 // import {StableDebtToken} from "../lib/aave-v3-core/contracts/protocol/tokenization/StableDebtToken.sol";
 // import {VariableDebtToken} from "../lib/aave-v3-core/contracts/protocol/tokenization/VariableDebtToken.sol";
@@ -93,7 +93,7 @@ contract AaveV3CoreDeployer is Test {
     IACLManager aaveV3ACLManager;
     AaveV3CorePriceOracle aaveV3PriceOracle;
     IPoolConfigurator aaveV3PoolConfigurator;
-    // IL2Pool aaveV3Pool;
+    IL2Pool aaveV3Pool;
 
     function deployPoolAddressesProvider(string memory marketId) private {
         aaveV3PoolAddressesProvider = new PoolAddressesProvider(marketId, aaveV3CoreDeployer);
@@ -119,11 +119,11 @@ contract AaveV3CoreDeployer is Test {
         aaveV3PoolConfigurator = PoolConfigurator(aaveV3PoolAddressesProvider.getPoolConfigurator());
     }
 
-    // function deployL2Pool() private {
-    //     L2Pool l2PoolLogic = new L2Pool(aaveV3PoolAddressesProvider);
-    //     aaveV3PoolAddressesProvider.setPoolImpl(address(l2PoolLogic));
-    //     aaveV3Pool = L2Pool(aaveV3PoolAddressesProvider.getPool());
-    // }
+    function deployL2Pool() private {
+        L2Pool l2PoolLogic = new L2Pool(aaveV3PoolAddressesProvider);
+        aaveV3PoolAddressesProvider.setPoolImpl(address(l2PoolLogic));
+        aaveV3Pool = L2Pool(aaveV3PoolAddressesProvider.getPool());
+    }
 
     // function deployPool() private {
     //     Pool poolLogic = new Pool(aaveV3PoolAddressesProvider);
@@ -150,7 +150,7 @@ contract AaveV3CoreDeployer is Test {
         deployPoolConfigurator();
 
         // 5) Deploy Pool or L2Pool
-        // deployL2Pool();
+        deployL2Pool();
         // if (config.useL2Pool) {
         // } else {
         //     deployPool();

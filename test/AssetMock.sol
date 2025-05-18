@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity >=0.8.0 <0.9.0;
 
 import {ERC20} from "../lib/aave-v3-core/contracts/dependencies/openzeppelin/contracts/ERC20.sol";
 
